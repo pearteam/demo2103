@@ -182,7 +182,7 @@ public class UserService {
 
 	public Integer createAdmin() throws DataAccessException {
 		RoleWithPermission roleWithPermission = new RoleWithPermission();
-		roleWithPermission.setName("ADMIN_CREATE_USER_ROLE");
+		roleWithPermission.setName("CREATE_USER_ROLE");
 		List<Permission> permissions = new ArrayList<>();
 		permissions.add(Permission.CREATE_USERS);
 		roleWithPermission.setPermissions(permissions);
