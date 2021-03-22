@@ -12,10 +12,30 @@ Solution is based on endpoints:
 
 -**role** to provide interface for managing users roles
 
-## User manual
+# Installation manual
 docker-composer will create it
 
-go to project folder:
+First there is need to build image with project:
+
+
+## Prerequisites:
+First build in project folder:
+```
+$ mvn package
+```
+Then check if is working (you can skip it):
+```
+$ java -jar target/demo-backend-0.0.1-SNAPSHOT.jar
+```
+Build docker image for springboot application.
+```
+$ docker build --tag=backend-demo:latest .
+```
+This command is also in file __build-docker-image-with-app.sh__
+
+## Run application:
+
+After success run 2 containers with db and spring boot app.
 
 ```
 $ docker-compose up -d
@@ -24,13 +44,15 @@ $ docker-compose up -d
 To check it connection as root:
 ```
 $ docker exec -it mysql57seb mysql -uroot -p
-$ docker exec -it mysql57seb mysql -uroot -p -P 3307
 ```
 database root password is `mypassword`
 
 Or check telnet:
 ```
+DB:
 $ telnet localhost 3306
+APP:
+$ telnet localhost 8080
 ```
 
 ## Improvements:
@@ -46,17 +68,8 @@ Reload:
 mysql> FLUSH PRIVILEGES;
 ```
 
-## Run application:
-First build in project folder:
-```
-$ mvn package
-```
-Then execute:
-```
-$ java -jar target/demo-backend-0.0.1-SNAPSHOT.jar
-```
 
-## Usage examples:
+# Usage examples:
 
 ### Get token:
 ```
@@ -92,7 +105,7 @@ Response:
 {"token":"a8c7229d-1c75-4d43-a570-ebafb19b0690"}
 ```
 
-## Admin is creating new more useful roles
+## Admin is creating new, more useful roles
 ```
 $ curl -d '{"name": "MANAGE_USER_ROLE", "permissions":["CREATE_USERS","LIST_USERS","DELETE_USERS","EDIT_USERS"]}' -H "Content-Type: application/json" -H "token: 7553e3e9-8234-4933-b8cc-587a6d220ecf" -X POST http://127.0.0.1:8080/v1/vis-test/roles
 $ curl -d '{"name": "LIST_USER_ROLE", "permissions":["LIST_USERS"]}' -H "Content-Type: application/json" -H "token: 7553e3e9-8234-4933-b8cc-587a6d220ecf" -X POST http://127.0.0.1:8080/v1/vis-test/roles
