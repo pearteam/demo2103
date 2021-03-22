@@ -3,7 +3,6 @@ package com.pearteam.demobackend.services;
 import com.pearteam.demobackend.domain.*;
 import com.pearteam.demobackend.domain.RolePermission;
 import com.pearteam.demobackend.domain.repositories.RolePermissionRepository;
-import com.pearteam.demobackend.domain.repositories.RoleRepository;
 import com.pearteam.demobackend.domain.repositories.UserRepository;
 import com.pearteam.demobackend.services.exceptions.DataAccessException;
 import com.pearteam.demobackend.services.exceptions.InvalidInputDataException;
@@ -25,9 +24,9 @@ public class UserService {
 	@Autowired
 	RolePermissionRepository rolePermissionRepository;
 	@Autowired
-	RoleRepository roleRepository;
-	@Autowired
 	RoleService roleService;
+
+	public static final String USERNAME_ALLOWED_CHARACTERS="[a-zA-Z0-9_]+";
 
 	public Integer checkUserExistsAndPasswordCorrect(String username, String password) {
 		User user = userRepository.findByUsernameAndPassword(username, password);
@@ -113,7 +112,7 @@ public class UserService {
 			throw new InvalidInputDataException("Missing user data");
 		}
 		String username = newUserData.get("username");
-		if (username == null || username.length() == 0 || !username.matches("[a-zA-Z0-9_]+")) {
+		if (username == null || username.length() == 0 || !username.matches(USERNAME_ALLOWED_CHARACTERS)) {
 			throw new InvalidInputDataException("Invalid username");
 		}
 		String password = newUserData.get("password");
@@ -130,7 +129,7 @@ public class UserService {
 		} catch (NumberFormatException ex) {
 			throw new InvalidInputDataException("Invalid roleId");
 		}
-		Role role = roleRepository.findById(roleId);
+		Role role = roleService.getRole(roleId);
 		if (role == null) {
 			throw new InvalidInputDataException("Invalid roleId");
 		}
@@ -143,7 +142,7 @@ public class UserService {
 		}
 		String username = updateUserData.get("username");
 		if (username != null) {
-			if (username.length() == 0 || !username.matches("[a-zA-Z0-9_]+")) {
+			if (username.length() == 0 || !username.matches(USERNAME_ALLOWED_CHARACTERS)) {
 				throw new InvalidInputDataException("Invalid username");
 			}
 			updatedUser.setUsername(username);
@@ -159,7 +158,7 @@ public class UserService {
 			} catch (NumberFormatException ex) {
 				throw new InvalidInputDataException("Invalid roleId");
 			}
-			Role role = roleRepository.findById(roleId);
+			Role role = roleService.getRole(roleId);
 			if (role == null) {
 				throw new InvalidInputDataException("Invalid roleId");
 			}
