@@ -87,6 +87,10 @@ public class UserController {
 			log.severe("User not found");
 			return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.NOT_FOUND);
 		}
+		if (userService.isAdmin(userToUpdate)) {
+			log.severe("User admin can't be updated");
+			return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.FORBIDDEN);
+		}
 		try {
 			userToUpdate = userService.updateUser(userToUpdate, updatedUserData);
 		} catch (Exception e) {
@@ -114,6 +118,10 @@ public class UserController {
 		if (userToDelete == null) {
 			log.severe("User not found");
 			return new ResponseEntity(null, new HttpHeaders(), HttpStatus.NOT_FOUND);
+		}
+		if (userService.isAdmin(userToDelete)) {
+			log.severe("User admin can't be deleted");
+			return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.FORBIDDEN);
 		}
 		try {
 			userService.deleteUser(userToDelete);
