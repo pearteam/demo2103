@@ -1,6 +1,4 @@
 # Seb demo application
-**Documentation in progress!!!**
-
 
 This application should provide REST endpoints manage users permissions
 
